@@ -113,3 +113,12 @@ impl AddAssign for ICoord {
         self.y += rhs.y;
     }
 }
+
+impl From<Coord> for ICoord {
+    fn from(value: Coord) -> Self {
+        Self {
+            x: value.x as isize,
+            y: value.y as isize,
+        }
+    }
+}
