@@ -36,7 +36,9 @@
 //! It will probably be useful to define some type aliases to prevent having to type out your generics over and over
 //! again. For example:
 //!
-//! ```no_run
+// we ignore this block of code because i really don't want to bother with importing
+// all those game libraries...
+//! ```ignore
 //! ##[derive(Enum)]
 //! enum MyControls {
 //!     Up,
@@ -49,17 +51,17 @@
 //!
 //! /// When you're writing a game with GGEZ
 //! mod ggez_game {
-//!     type InputHandler = PollingInputHandler<ggez::input::keyboard::KeyCode, MyControls>;
+//!     type InputHandler = PollingInputHandler<ggez::input::keyboard::KeyCode, super::MyControls>;
 //! }
 //!
 //! /// When you're writing a game with Piston
 //! mod piston_game {
-//!     type InputHandler = EventInputHandler<piston::input::keyboard::Key, MyControls>;
+//!     type InputHandler = EventInputHandler<piston::input::keyboard::Key, super::MyControls>;
 //! }
 //!
 //! /// When you're writing a game for the browser with wasm-pack or similar
 //! mod browser_wasm_js_something {
-//!     type InputHandler = EventInputHandler<String, MyControls>;
+//!     type InputHandler = EventInputHandler<String, super::MyControls>;
 //! }
 //!
 //! ```

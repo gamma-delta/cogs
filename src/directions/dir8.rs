@@ -1,3 +1,5 @@
+use crate::int_coords::ICoord;
+
 /// Eight-way directions.
 ///
 /// These start at North and increment counter-clockwise,
@@ -34,7 +36,7 @@ impl Direction8 {
     /// Negative numbers go counter-clockwise.
     ///
     /// ```
-    /// # use cogs::directions::Direction8;
+    /// # use cogs_gamedev::directions::Direction8;
     /// use Direction8::*;
     /// let north = North;
     /// assert_eq!(north.rotate(1), NorthEast);
@@ -53,7 +55,7 @@ impl Direction8 {
     /// Flip this direction.
     ///
     /// ```
-    /// # use cogs::directions::Direction8;
+    /// # use cogs_gamedev::directions::Direction8;
     /// use Direction8::*;
     /// assert_eq!(North.flip(), South);
     /// assert_eq!(West.flip(), East);
@@ -74,7 +76,7 @@ impl Direction8 {
     /// If you need it in degrees just call `.to_degrees` on the result.
     ///
     /// ```
-    /// # use cogs::directions::Direction8;
+    /// # use cogs_gamedev::directions::Direction8;
     /// use Direction8::*;
     /// use std::f32::consts::TAU;
     ///
@@ -90,5 +92,30 @@ impl Direction8 {
     /// ```
     pub fn radians(self) -> f32 {
         ((self as i8) - 2).rem_euclid(8) as f32 * std::f32::consts::TAU / 8.0
+    }
+
+    /// Get the deltas a step in this direction would result in,
+    /// as an ICoord.
+    ///
+    /// ```
+    /// # use cogs_gamedev::directions::Direction8;
+    /// # use cogs_gamedev::int_coords::ICoord;
+    /// use Direction8::*;
+    ///
+    /// assert_eq!(East.deltas(), ICoord {x: 1, y: 0});
+    /// assert_eq!(NorthWest.deltas(), ICoord {x: -1, y: -1});
+    /// ```
+    pub fn deltas(self) -> ICoord {
+        let (x, y) = match self {
+            Direction8::North => (0, -1),
+            Direction8::NorthEast => (1, -1),
+            Direction8::East => (1, 0),
+            Direction8::SouthEast => (1, 1),
+            Direction8::South => (0, 1),
+            Direction8::SouthWest => (-1, 1),
+            Direction8::West => (-1, 0),
+            Direction8::NorthWest => (-1, -1),
+        };
+        ICoord { x, y }
     }
 }

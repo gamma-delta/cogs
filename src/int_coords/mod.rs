@@ -80,7 +80,7 @@ impl ICoord {
     /// Zeroes are treated as positive.
     ///
     /// ```
-    /// # use cogs::int_coords::ICoord;
+    /// # use cogs_gamedev::int_coords::ICoord;
     /// assert_eq!(ICoord::new(4, 5).quadrant(), 1);
     /// assert_eq!(ICoord::new(-3, -2).quadrant(), 3);
     /// // Zero is treated as positive
