@@ -2,6 +2,7 @@
 
 use std::{
     convert::TryFrom,
+    convert::TryInto,
     num::TryFromIntError,
     ops::{Add, AddAssign},
 };
@@ -24,6 +25,11 @@ impl Coord {
     /// (AKA, `y * width + x`.)
     pub fn to_2d_idx(self, width: usize) -> usize {
         self.y * width + self.x
+    }
+
+    /// Convert this into an ICoord.
+    pub fn to_icoord(self) -> ICoord {
+        self.into()
     }
 }
 
@@ -94,6 +100,12 @@ impl ICoord {
             (false, false) => 3,
             (true, false) => 4,
         }
+    }
+
+    /// Try to convert this to a Coord.
+    /// Returns `Err(())` in case any part is negative.
+    pub fn to_coord(self) -> Result<Coord, ()> {
+        self.try_into().map_err(|_e| ())
     }
 }
 
