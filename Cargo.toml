@@ -1,5 +1,5 @@
 [package]
-name = "cogs"
+name = "cogs-gamedev"
 version = "0.1.0"
 authors = ["gamma-delta"]
 edition = "2018"

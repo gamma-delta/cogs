@@ -19,3 +19,7 @@ They are:
 - `int_coords` has type definitions for integer-based coordinates.
 
 NOTE: EVENT-STYLE CONTROLS ARE NOT IMPLEMENTED YET!
+
+## Why is the crate called `cogs-gamedev`?
+
+Because someone already took the name `cogs` ;-;
