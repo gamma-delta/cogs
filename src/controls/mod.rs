@@ -10,7 +10,12 @@
 //! `EventInputHandler` is used when your game engine provides player input by producing Input events. SDL2 and
 //! browsers with WASM work this way. I believe Piston also works this way, but I've never worked with Piston.
 //!
-//! Both styles of input handling should expose the same API for querying inputs.
+//! # API
+//!
+//! Both styles of input handling implement the same trait, `InputHandler`. It has functions for querying the state of the
+//! controls, but not for updating them.
+//! This lets you write your main loop function generic over the kind of input handler you have, in case you want
+//! to port your game to platforms with different input styles.
 //!
 //! # Updating the Inputs
 //!
@@ -76,86 +81,27 @@
 //! listening for a control change, it's undefined which one the control will be set to.
 //! It will be set to one of them, however.
 
-use std::{collections::HashMap, collections::HashSet, hash::Hash};
+mod polling;
+pub use polling::PollingInputHandler;
+mod event;
+pub use event::EventInputHandler;
 
-use enum_map::{Enum, EnumMap};
+use std::hash::Hash;
 
-/// Polling-based input handler.
-/// See module-level documentation for more.
-pub struct PollingInputHandler<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Clone> {
-    /// Maps inputs to the controls they activate
-    control_config: HashMap<I, C>,
-    /// How long each control has been pressed
-    input_time: EnumMap<C, u32>,
-    /// If this is Some, we're waiting for a new control config.
-    listening_for_input: Option<C>,
-}
+use enum_map::Enum;
 
-impl<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Clone> PollingInputHandler<I, C> {
-    /// Create a new PollingInputHandler without any controls.
-    pub fn new_empty() -> Self {
-        Self {
-            control_config: HashMap::new(),
-            // conveniently, the default value for u32 is 0!
-            // and we want the map to start full of zeros.
-            // (zeroes?)
-            input_time: EnumMap::new(),
-            listening_for_input: None,
-        }
-    }
-
-    /// Create a new PollingInputHandler with the specified controls.
-    /// The HashMap in should map inputs to the controls you want them to actuate.
-    pub fn new(control_config: HashMap<I, C>) -> Self {
-        Self {
-            control_config,
-            input_time: EnumMap::new(),
-            listening_for_input: None,
-        }
-    }
-
-    /// Update the input handler. You MUST CALL THIS FIRST THING in your game loop.
-    /// Otherwise things won't get updated correctly.
-    pub fn update(&mut self, new_inputs: &HashSet<I>) {
-        match &self.listening_for_input {
-            None => {
-                for (input, control) in self.control_config.iter() {
-                    if new_inputs.contains(input) {
-                        // this input is getting pressed!
-                        // increment our timer
-                        self.input_time[control.to_owned()] += 1;
-                    } else {
-                        // this input is not getting pressed
-                        // reset our timer
-                        self.input_time[control.to_owned()] = 0;
-                    }
-                }
-            }
-            Some(ctrl) => {
-                if let Some(input) = new_inputs.iter().next() {
-                    // we're pressing something!
-                    self.control_config
-                        .insert(input.to_owned(), ctrl.to_owned());
-                }
-            }
-        }
-    }
-
+/// The InputHandler trait, makng sure that both styles of input handling
+/// expose the same API.
+pub trait InputHandler<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Clone> {
     /// Is this input pressed down?
     /// i.e. is the player pressing the button?
-    pub fn pressed(&self, control: C) -> bool {
-        self.input_time[control] >= 1
-    }
+    fn pressed(&self, control: C) -> bool;
 
     /// Is this input released?
     /// i.e. is the player *not* pressing the button?
-    pub fn released(&self, control: C) -> bool {
-        self.input_time[control] == 0
-    }
+    fn released(&self, control: C) -> bool;
 
     /// Is this input being clicked down?
     /// i.e. was it up last frame, but down this frame?
-    pub fn clicked_down(&self, control: C) -> bool {
-        self.input_time[control] == 1
-    }
+    fn clicked_down(&self, control: C) -> bool;
 }
