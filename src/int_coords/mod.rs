@@ -8,7 +8,7 @@ use std::{
 };
 
 /// Unsigned-int coordinates
-#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+#[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub struct Coord {
     pub x: usize,
     pub y: usize,
@@ -55,7 +55,6 @@ impl AddAssign for Coord {
 impl TryFrom<ICoord> for Coord {
     type Error = TryFromIntError;
     fn try_from(value: ICoord) -> Result<Self, Self::Error> {
-        use std::convert::TryInto;
         Ok(Self {
             x: value.x.try_into()?,
             y: value.y.try_into()?,
@@ -64,7 +63,7 @@ impl TryFrom<ICoord> for Coord {
 }
 
 /// Signed-int coordinates
-#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+#[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub struct ICoord {
     pub x: isize,
     pub y: isize,

@@ -5,7 +5,7 @@ use crate::int_coords::ICoord;
 /// These start at North and increment counter-clockwise,
 /// so you can convert them to integers with `as` and use them
 /// in rotational calculations if you need.
-#[derive(Debug, Copy, Clone, Eq, PartialEq, Ord, PartialOrd)]
+#[derive(Debug, Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
 pub enum Direction4 {
     North,
     East,
