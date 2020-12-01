@@ -1,6 +1,6 @@
 [package]
 name = "cogs-gamedev"
-version = "0.1.4"
+version = "0.1.5"
 authors = ["gamma-delta"]
 edition = "2018"
 description = "Common, Obnoxious Game Stuff. Contains a bunch of useful boilerplate for writing games."
