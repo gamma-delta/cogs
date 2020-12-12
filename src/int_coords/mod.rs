@@ -4,7 +4,7 @@ use std::{
     convert::TryFrom,
     convert::TryInto,
     num::TryFromIntError,
-    ops::{Add, AddAssign},
+    ops::{Add, AddAssign, Mul, MulAssign},
 };
 
 /// Unsigned-int coordinates
@@ -47,6 +47,23 @@ impl AddAssign for Coord {
     fn add_assign(&mut self, rhs: Self) {
         self.x += rhs.x;
         self.y += rhs.y;
+    }
+}
+
+impl Mul<usize> for Coord {
+    type Output = Self;
+    fn mul(self, rhs: usize) -> Self::Output {
+        Self {
+            x: self.x * rhs,
+            y: self.y * rhs,
+        }
+    }
+}
+
+impl MulAssign<usize> for Coord {
+    fn mul_assign(&mut self, rhs: usize) {
+        self.x *= rhs;
+        self.y *= rhs;
     }
 }
 
@@ -122,6 +139,23 @@ impl AddAssign for ICoord {
     fn add_assign(&mut self, rhs: Self) {
         self.x += rhs.x;
         self.y += rhs.y;
+    }
+}
+
+impl Mul<isize> for ICoord {
+    type Output = Self;
+    fn mul(self, rhs: isize) -> Self::Output {
+        Self {
+            x: self.x * rhs,
+            y: self.y * rhs,
+        }
+    }
+}
+
+impl MulAssign<isize> for ICoord {
+    fn mul_assign(&mut self, rhs: isize) {
+        self.x *= rhs;
+        self.y *= rhs;
     }
 }
 
