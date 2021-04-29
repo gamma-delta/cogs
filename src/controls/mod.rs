@@ -1,7 +1,5 @@
 //! Query the player's input and turn it into controls.
 //!
-//! **NOTE: EVENT-STYLE CONTROLS ARE NOT IMPLEMENTED YET!**
-//!
 //! This module defines two main structs: `PollingInputHandler` and `EventInputHandler`.
 //!
 //! `PollingInputHandler` is used when your game engine provides player input by polling for it. The GGEZ library
@@ -24,7 +22,7 @@
 //!
 //! For `PollingInputHandler`, you must pass in a `&HashSet` containing all the pressed keys to `update`.
 //!
-//! `EventInputHandler` also exposes `TODO`, which you must call upon getting an input event.
+//! `EventInputHandler` also exposes `input_down` and `input_up`, which you must call upon getting an input event.
 //!
 //! # Generics
 //!

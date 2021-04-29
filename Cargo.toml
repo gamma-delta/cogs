@@ -1,6 +1,6 @@
 [package]
 name = "cogs-gamedev"
-version = "0.1.6"
+version = "0.1.7"
 authors = ["gamma-delta"]
 edition = "2018"
 description = "Common, Obnoxious Game Stuff. Contains a bunch of useful boilerplate for writing games."
@@ -12,4 +12,4 @@ categories = ["game-development", "game-engines"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-enum-map = "0.6.4"
+enum-map = "1.0.0"

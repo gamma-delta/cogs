@@ -16,9 +16,7 @@ They are:
 
 - `controls` handles player input & controls. It works both with polling-style (like ggez) and event-style (like piston) input handling. You can query for both state and transitions (aka, detect when the player has *just* pressed a button.)
 - `directions` defines 4-way and 8-way direction enums, as well as helper functions to rotate and flip them.
-- `int_coords` has type definitions for integer-based coordinates.
-
-NOTE: EVENT-STYLE CONTROLS ARE NOT IMPLEMENTED YET!
+- `int_coords` has type definitions for integer-based coordinates
 
 ## Why is the crate called `cogs-gamedev`?
 
