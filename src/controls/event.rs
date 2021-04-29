@@ -25,7 +25,7 @@ impl<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Clone> EventInputHandler<I
             // conveniently, the default value for u32 is 0!
             // and we want the map to start full of zeros.
             // (zeroes?)
-            input_time: EnumMap::new(),
+            input_time: EnumMap::default(),
             listening_for_input: None,
             pressed_inputs: HashSet::new(),
         }
@@ -36,7 +36,7 @@ impl<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Clone> EventInputHandler<I
     pub fn new(control_config: HashMap<I, C>) -> Self {
         Self {
             control_config,
-            input_time: EnumMap::new(),
+            input_time: EnumMap::default(),
             listening_for_input: None,
             pressed_inputs: HashSet::new(),
         }

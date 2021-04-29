@@ -23,7 +23,7 @@ impl<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Clone> PollingInputHandler
             // conveniently, the default value for u32 is 0!
             // and we want the map to start full of zeros.
             // (zeroes?)
-            input_time: EnumMap::new(),
+            input_time: EnumMap::default(),
             listening_for_input: None,
         }
     }
@@ -33,7 +33,7 @@ impl<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Clone> PollingInputHandler
     pub fn new(control_config: HashMap<I, C>) -> Self {
         Self {
             control_config,
-            input_time: EnumMap::new(),
+            input_time: EnumMap::default(),
             listening_for_input: None,
         }
     }
