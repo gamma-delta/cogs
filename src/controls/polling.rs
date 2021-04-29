@@ -89,3 +89,22 @@ impl<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Clone> InputHandler<I, C>
         self.input_time[control] == 1
     }
 }
+
+/// EnumMap doesn't implement Clone so we do it ourselves
+impl<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Clone> Clone for PollingInputHandler<I, C> {
+    fn clone(&self) -> Self {
+        let control_config = self.control_config.clone();
+        let listening_for_input = self.listening_for_input.clone();
+
+        let mut input_time = EnumMap::default();
+        for (k, v) in self.input_time.iter() {
+            input_time[k] = *v;
+        }
+
+        Self {
+            control_config,
+            input_time,
+            listening_for_input,
+        }
+    }
+}
