@@ -1,11 +1,13 @@
 use crate::int_coords::ICoord;
 
+use enum_map::Enum;
+
 /// Eight-way directions.
 ///
 /// These start at North and increment counter-clockwise,
 /// so you can convert them to integers with `as` and use them
 /// in rotational calculations if you need.
-#[derive(Debug, Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
+#[derive(Debug, Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Enum)]
 pub enum Direction8 {
     North,
     NorthEast,

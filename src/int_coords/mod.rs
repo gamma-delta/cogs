@@ -7,6 +7,8 @@ use std::{
     ops::{Add, AddAssign, Mul, MulAssign},
 };
 
+use crate::directions::{Direction4, Direction8};
+
 /// Unsigned-int coordinates
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub struct Coord {
@@ -120,6 +122,8 @@ impl ICoord {
 
     /// Try to convert this to a Coord.
     /// Returns `Err(())` in case any part is negative.
+    #[deprecated(note = "use `.try_into()")]
+    #[allow(clippy::result_unit_err)]
     pub fn to_coord(self) -> Result<Coord, ()> {
         self.try_into().map_err(|_e| ())
     }
@@ -139,6 +143,32 @@ impl AddAssign for ICoord {
     fn add_assign(&mut self, rhs: Self) {
         self.x += rhs.x;
         self.y += rhs.y;
+    }
+}
+
+impl Add<Direction4> for ICoord {
+    type Output = Self;
+    fn add(self, rhs: Direction4) -> Self::Output {
+        self + rhs.deltas()
+    }
+}
+
+impl AddAssign<Direction4> for ICoord {
+    fn add_assign(&mut self, rhs: Direction4) {
+        *self += rhs.deltas();
+    }
+}
+
+impl Add<Direction8> for ICoord {
+    type Output = Self;
+    fn add(self, rhs: Direction8) -> Self::Output {
+        self + rhs.deltas()
+    }
+}
+
+impl AddAssign<Direction8> for ICoord {
+    fn add_assign(&mut self, rhs: Direction8) {
+        *self += rhs.deltas();
     }
 }
 
