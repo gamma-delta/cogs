@@ -1,6 +1,8 @@
 use crate::int_coords::ICoord;
 
 use enum_map::Enum;
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
 
 /// Eight-way directions.
 ///
@@ -8,6 +10,7 @@ use enum_map::Enum;
 /// so you can convert them to integers with `as` and use them
 /// in rotational calculations if you need.
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Enum)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub enum Direction8 {
     North,
     NorthEast,

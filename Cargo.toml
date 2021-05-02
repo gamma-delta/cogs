@@ -13,3 +13,7 @@ categories = ["game-development", "game-engines"]
 
 [dependencies]
 enum-map = "1.0.0"
+serde = { version = "1.0.125", features = ["derive"], optional = true }
+
+[features]
+default = []

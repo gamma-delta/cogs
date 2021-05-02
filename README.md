@@ -21,3 +21,7 @@ They are:
 ## Why is the crate called `cogs-gamedev`?
 
 Because someone already took the name `cogs` ;-;
+
+## Serde Support
+
+By enabling the crate feature `serde`, Directions and Coords can be (de)serialized.

@@ -1,5 +1,10 @@
 //! Integer-based coordinates.
 
+use crate::directions::{Direction4, Direction8};
+
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
+
 use std::{
     convert::TryFrom,
     convert::TryInto,
@@ -7,10 +12,9 @@ use std::{
     ops::{Add, AddAssign, Mul, MulAssign},
 };
 
-use crate::directions::{Direction4, Direction8};
-
 /// Unsigned-int coordinates
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Coord {
     pub x: usize,
     pub y: usize,
@@ -83,6 +87,7 @@ impl TryFrom<ICoord> for Coord {
 
 /// Signed-int coordinates
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct ICoord {
     pub x: isize,
     pub y: isize,
