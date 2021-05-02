@@ -1,4 +1,4 @@
-use std::{collections::HashMap, collections::HashSet, hash::Hash};
+use std::{collections::HashMap, hash::Hash};
 
 use enum_map::{Enum, EnumMap};
 
@@ -6,29 +6,21 @@ use super::InputHandler;
 
 /// Event-based input handler
 /// See module-level documentation for more detail.
-pub struct EventInputHandler<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Clone> {
+pub struct EventInputHandler<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Enum<bool> + Clone> {
     /// Maps inputs to the controls they activate
     control_config: HashMap<I, C>,
     /// How long each control has been pressed
     input_time: EnumMap<C, u32>,
     /// If this is Some, we're waiting for a new control config.
     listening_for_input: Option<C>,
-    /// The set of all the input events we've gotten since we last called `update`
-    pressed_inputs: HashSet<I>,
+    /// The set of all the control events we've gotten since we last called `update`
+    pressed_controls: EnumMap<C, bool>,
 }
 
-impl<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Clone> EventInputHandler<I, C> {
+impl<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Enum<bool> + Clone> EventInputHandler<I, C> {
     /// Create a new EventInputHandler without any controls.
     pub fn new_empty() -> Self {
-        Self {
-            control_config: HashMap::new(),
-            // conveniently, the default value for u32 is 0!
-            // and we want the map to start full of zeros.
-            // (zeroes?)
-            input_time: EnumMap::default(),
-            listening_for_input: None,
-            pressed_inputs: HashSet::new(),
-        }
+        Self::new(HashMap::new())
     }
 
     /// Create a new EventInputHandler with the specified controls.
@@ -38,7 +30,7 @@ impl<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Clone> EventInputHandler<I
             control_config,
             input_time: EnumMap::default(),
             listening_for_input: None,
-            pressed_inputs: HashSet::new(),
+            pressed_controls: EnumMap::default(),
         }
     }
 
@@ -47,7 +39,9 @@ impl<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Clone> EventInputHandler<I
     pub fn input_down(&mut self, input: I) {
         match &self.listening_for_input {
             None => {
-                self.pressed_inputs.insert(input);
+                if let Some(control) = self.control_config.get(&input) {
+                    self.pressed_controls[control.to_owned()] = true;
+                }
             }
             Some(ctrl) => {
                 // Update the control ...
@@ -61,7 +55,9 @@ impl<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Clone> EventInputHandler<I
     /// Call this function when your game engine gives you a KeyUp event,
     /// or any event signaling that an input has been released.
     pub fn input_up(&mut self, input: I) {
-        self.pressed_inputs.remove(&input);
+        if let Some(control) = self.control_config.get(&input) {
+            self.pressed_controls[control.to_owned()] = false;
+        }
     }
 
     /// Manually clear all the inputs the handler has received.
@@ -69,15 +65,15 @@ impl<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Clone> EventInputHandler<I
     /// (I'm not sure why you would want to do this, but hey, might as well
     /// expose the functionality.)
     pub fn clear_inputs(&mut self) {
-        self.pressed_inputs.clear();
+        self.pressed_controls.clear();
     }
 
     /// Update the input handler. You MUST CALL THIS FIRST THING in your game loop.
     /// Otherwise things won't get updated correctly.
     pub fn update(&mut self) {
         if self.listening_for_input.is_none() {
-            for (input, control) in self.control_config.iter() {
-                if self.pressed_inputs.contains(input) {
+            for control in self.control_config.values() {
+                if self.pressed_controls[control.to_owned()] {
                     // this input is getting pressed!
                     // increment our timer
                     self.input_time[control.to_owned()] += 1;
@@ -92,7 +88,7 @@ impl<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Clone> EventInputHandler<I
 }
 
 // there's gotta be a better way to do these generics
-impl<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Clone> InputHandler<I, C>
+impl<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Enum<bool> + Clone> InputHandler<I, C>
     for EventInputHandler<I, C>
 {
     /// Is this input pressed down?
@@ -115,11 +111,17 @@ impl<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Clone> InputHandler<I, C>
 }
 
 /// EnumMap doesn't implement Clone so we do it ourselves
-impl<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Clone> Clone for EventInputHandler<I, C> {
+impl<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Enum<bool> + Clone> Clone
+    for EventInputHandler<I, C>
+{
     fn clone(&self) -> Self {
         let control_config = self.control_config.clone();
         let listening_for_input = self.listening_for_input.clone();
-        let pressed_inputs = self.pressed_inputs.clone();
+
+        let mut pressed_controls = EnumMap::default();
+        for (k, v) in self.pressed_controls.iter() {
+            pressed_controls[k] = *v;
+        }
 
         let mut input_time = EnumMap::default();
         for (k, v) in self.input_time.iter() {
@@ -130,7 +132,7 @@ impl<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Clone> Clone for EventInpu
             control_config,
             input_time,
             listening_for_input,
-            pressed_inputs,
+            pressed_controls,
         }
     }
 }
