@@ -72,15 +72,15 @@ impl<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Enum<bool> + Clone> EventI
     /// Otherwise things won't get updated correctly.
     pub fn update(&mut self) {
         if self.listening_for_input.is_none() {
-            for control in self.control_config.values() {
-                if self.pressed_controls[control.to_owned()] {
+            for (control, pressed) in self.pressed_controls.iter() {
+                if *pressed {
                     // this input is getting pressed!
                     // increment our timer
-                    self.input_time[control.to_owned()] += 1;
+                    self.input_time[control] += 1;
                 } else {
                     // this input is not getting pressed
                     // reset our timer
-                    self.input_time[control.to_owned()] = 0;
+                    self.input_time[control] = 0;
                 }
             }
         }
