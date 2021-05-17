@@ -14,9 +14,10 @@ This crate is broken down into lots of modules. (Or, it will be, once I get arou
 
 They are:
 
-- `controls` handles player input & controls. It works both with polling-style (like ggez) and event-style (like piston) input handling. You can query for both state and transitions (aka, detect when the player has *just* pressed a button.)
-- `directions` defines 4-way and 8-way direction enums, as well as helper functions to rotate and flip them.
-- `int_coords` has type definitions for integer-based coordinates
+- `controls` handles player input & controls.
+  It works both with polling-style (like ggez) and event-style (like macroquad) input handling.
+  You can query for both state and transitions (aka, detect when the player has *just* pressed a button.)
+- `grids` has helper types for grid-based games: stuff like coordinates, directions, and rectangles.
 
 ## Why is the crate called `cogs-gamedev`?
 
@@ -24,4 +25,4 @@ Because someone already took the name `cogs` ;-;
 
 ## Serde Support
 
-By enabling the crate feature `serde`, Directions and Coords can be (de)serialized.
+By enabling the crate feature `serde`, most things in the crate can be (de)serialized.

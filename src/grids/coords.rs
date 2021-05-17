@@ -1,6 +1,6 @@
 //! Integer-based coordinates.
 
-use crate::directions::{Direction4, Direction8};
+use super::{Direction4, Direction8};
 
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
