@@ -18,6 +18,7 @@ They are:
   It works both with polling-style (like ggez) and event-style (like macroquad) input handling.
   You can query for both state and transitions (aka, detect when the player has *just* pressed a button.)
 - `grids` has helper types for grid-based games: stuff like coordinates, directions, and rectangles.
+- `ease` has a suite of easing and interpolation helpers.
 
 ## Why is the crate called `cogs-gamedev`?
 
