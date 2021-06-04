@@ -119,15 +119,32 @@ impl<T> WeightedPicker<T> {
     }
 
     /// Get an item from the list.
-    pub fn get<R: Rng + ?Sized>(&self, rand: &mut R) -> &T {
-        let column = rand.gen_range(0..self.prob.len());
-        let coin_toss = rand.gen::<f64>() < self.prob[column];
-        let idx = if coin_toss {
+    pub fn get<R: Rng + ?Sized>(&self, rng: &mut R) -> &T {
+        &self.items[self.get_idx(rng)]
+    }
+
+    /// Get an index into the internal list.
+    ///
+    /// You can use this function to save some space by passing a vec
+    /// where `T` is `()`, if you want `usize` outputs, I guess.
+    pub fn get_idx<R: Rng + ?Sized>(&self, rng: &mut R) -> usize {
+        let column = rng.gen_range(0..self.prob.len());
+        let coin_toss = rng.gen::<f64>() < self.prob[column];
+        if coin_toss {
             column
         } else {
             self.alias[column]
-        };
-        &self.items[idx]
+        }
+    }
+
+    /// The same as creating a WeightedPicker and then calling `get`,
+    /// but you don't need to actually make the WeightedPicker.
+    pub fn pick<R: Rng + ?Sized>(items: Vec<(T, f64)>, rng: &mut R) -> T {
+        let mut wp = WeightedPicker::new(items);
+        let idx = wp.get_idx(rng);
+        // this would be unsound to use after removal,
+        // but fortunately we don't need to use it again
+        wp.items.remove(idx)
     }
 }
 
