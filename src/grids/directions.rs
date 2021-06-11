@@ -64,7 +64,7 @@ impl Direction4 {
     /// Flip this direction.
     ///
     /// ```
-    /// # use cogs_gamedev::directions::Direction4;
+    /// # use cogs_gamedev::grids::Direction4;
     /// use Direction4::*;
     /// assert_eq!(North.flip(), South);
     /// assert_eq!(West.flip(), East);
@@ -84,7 +84,7 @@ impl Direction4 {
     /// If you need it in degrees just call `.to_degrees` on the result.
     ///
     /// ```
-    /// # use cogs_gamedev::directions::Direction4;
+    /// # use cogs_gamedev::grids::Direction4;
     /// use Direction4::*;
     /// use std::f32::consts::TAU;
     ///
@@ -102,8 +102,8 @@ impl Direction4 {
     /// Get the deltas a step in this direction would result in, as a ICoord.
     ///
     /// ```
-    /// # use cogs_gamedev::directions::Direction4;
-    /// # use cogs_gamedev::int_coords::ICoord;
+    /// # use cogs_gamedev::grids::Direction4;
+    /// # use cogs_gamedev::grids::ICoord;
     /// use Direction4::*;
     ///
     /// assert_eq!(North.deltas(), ICoord {x: 0, y: -1});
@@ -117,6 +117,32 @@ impl Direction4 {
             Direction4::West => (-1, 0),
         };
         ICoord { x, y }
+    }
+
+    /// See if this direction points horizontally (ie, is `East` or `West`).
+    ///
+    /// ```
+    /// # use cogs_gamedev::grids::Direction4;
+    /// use Direction4::*;
+    ///
+    /// assert!(East.is_horizontal());
+    /// assert!(!South.is_horizontal());
+    /// ```
+    pub fn is_horizontal(self) -> bool {
+        matches!(self, Direction4::East | Direction4::West)
+    }
+
+    /// See if this direction points vertically (ie, is `North` or `South`).
+    ///
+    /// ```
+    /// # use cogs_gamedev::grids::Direction4;
+    /// use Direction4::*;
+    ///
+    /// assert!(North.is_vertical());
+    /// assert!(!West.is_vertical());
+    /// ```
+    pub fn is_vertical(self) -> bool {
+        matches!(self, Direction4::North | Direction4::South)
     }
 }
 
@@ -161,7 +187,7 @@ impl Direction8 {
     /// use Rotation::*;
     ///
     /// assert_eq!(NorthEast.rotate(Clockwise), East);
-    /// assert_eq!(South.rotate(CounterClockwise), SouthWest);
+    /// assert_eq!(South.rotate(CounterClockwise), SouthEast);
     /// ```
     pub fn rotate(self, rot: Rotation) -> Self {
         self.rotate_by(rot.steps_clockwise())
@@ -190,7 +216,7 @@ impl Direction8 {
     /// Flip this direction.
     ///
     /// ```
-    /// # use cogs_gamedev::directions::Direction8;
+    /// # use cogs_gamedev::grids::Direction8;
     /// use Direction8::*;
     /// assert_eq!(North.flip(), South);
     /// assert_eq!(West.flip(), East);
@@ -211,7 +237,7 @@ impl Direction8 {
     /// If you need it in degrees just call `.to_degrees` on the result.
     ///
     /// ```
-    /// # use cogs_gamedev::directions::Direction8;
+    /// # use cogs_gamedev::grids::Direction8;
     /// use Direction8::*;
     /// use std::f32::consts::TAU;
     ///
@@ -233,8 +259,8 @@ impl Direction8 {
     /// as an ICoord.
     ///
     /// ```
-    /// # use cogs_gamedev::directions::Direction8;
-    /// # use cogs_gamedev::int_coords::ICoord;
+    /// # use cogs_gamedev::grids::Direction8;
+    /// # use cogs_gamedev::grids::ICoord;
     /// use Direction8::*;
     ///
     /// assert_eq!(East.deltas(), ICoord {x: 1, y: 0});
