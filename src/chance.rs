@@ -1,3 +1,4 @@
+//! Random and probabilistic things helpful for games.
 use itertools::{Either, Itertools};
 use rand::Rng;
 
@@ -124,6 +125,8 @@ impl<T> WeightedPicker<T> {
     }
 
     /// Get an index into the internal list.
+    /// This is like [`WeightedPicker::get`], but returns the index of the
+    /// selected value instead of the value.
     ///
     /// You can use this function to save some space by passing a vec
     /// where `T` is `()`, if you want `usize` outputs, I guess.
@@ -137,6 +140,20 @@ impl<T> WeightedPicker<T> {
         }
     }
 
+    /// Manually index into the picker's array.
+    pub fn get_by_idx(&self, idx: usize) -> Option<&T> {
+        self.items.get(idx)
+    }
+
+    /// Manually index into the picker's array.
+    /// You can use this to mutate entries once they've been created.
+    ///
+    /// Note there is no way to mutate probabilities after creation,
+    /// nor any way to add or remove possible values.
+    pub fn get_mut_by_idx(&mut self, idx: usize) -> Option<&mut T> {
+        self.items.get_mut(idx)
+    }
+
     /// The same as creating a WeightedPicker and then calling `get`,
     /// but you don't need to actually make the WeightedPicker.
     pub fn pick<R: Rng + ?Sized>(items: Vec<(T, f64)>, rng: &mut R) -> T {
@@ -144,6 +161,7 @@ impl<T> WeightedPicker<T> {
         let idx = wp.get_idx(rng);
         // this would be unsound to use after removal,
         // but fortunately we don't need to use it again
+        // not sure why i can't move out of it.
         wp.items.remove(idx)
     }
 }

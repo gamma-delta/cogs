@@ -1,11 +1,15 @@
+//! Utilities for quick and dirty hashing.
+
 use ahash::AHasher;
 
 use std::hash::{Hash, Hasher};
 
 /**
 Get a hash for a value. This is handy for anytime you need a random-ish, but
-constant, value based on some other value. One good usecase is
-variagated tilesets: pass in the tile's [`ICoord`] position to this function
+constant, value based on some other value.
+
+One good usecase is variagated tilesets:
+pass in the tile's [`ICoord`] position to this function
 and use it as a selector on the tile variants.
 
 This isn't guaranteed to be the same across compiles or restarts,
@@ -19,9 +23,9 @@ assert_ne!(hashcode(&10i32), hashcode(&600i32));
 
 ```
 
-[`ICoord`]: crate::grids::ICoord;
+[`ICoord`]: crate::grids::ICoord
 */
-pub fn hashcode<H: Hash>(hashee: &H) -> u64 {
+pub fn hashcode<H: Hash + ?Sized>(hashee: &H) -> u64 {
     let mut hasher = AHasher::default();
     hashee.hash(&mut hasher);
     hasher.finish()

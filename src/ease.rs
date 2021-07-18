@@ -1,3 +1,5 @@
+//! A collection of easing functions.
+
 use num_traits::{Float, FloatConst};
 
 /// Trait for things that can interpolate values.
