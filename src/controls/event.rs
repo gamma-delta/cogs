@@ -1,5 +1,6 @@
-use std::{collections::HashMap, hash::Hash};
+use std::hash::Hash;
 
+use ahash::AHashMap;
 use enum_map::{Enum, EnumMap};
 
 use super::InputHandler;
@@ -8,7 +9,7 @@ use super::InputHandler;
 /// See module-level documentation for more detail.
 pub struct EventInputHandler<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Enum<bool> + Clone> {
     /// Maps inputs to the controls they activate
-    control_config: HashMap<I, C>,
+    control_config: AHashMap<I, C>,
     /// How long each control has been pressed
     input_time: EnumMap<C, u32>,
     /// If this is Some, we're waiting for a new control config.
@@ -20,12 +21,12 @@ pub struct EventInputHandler<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + En
 impl<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Enum<bool> + Clone> EventInputHandler<I, C> {
     /// Create a new EventInputHandler without any controls.
     pub fn new_empty() -> Self {
-        Self::new(HashMap::new())
+        Self::new(AHashMap::new())
     }
 
     /// Create a new EventInputHandler with the specified controls.
     /// The HashMap in should map inputs to the controls you want them to actuate.
-    pub fn new(control_config: HashMap<I, C>) -> Self {
+    pub fn new(control_config: AHashMap<I, C>) -> Self {
         Self {
             control_config,
             input_time: EnumMap::default(),

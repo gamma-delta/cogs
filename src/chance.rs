@@ -1,4 +1,5 @@
 //! Random and probabilistic things helpful for games.
+
 use itertools::{Either, Itertools};
 use rand::Rng;
 

@@ -1,5 +1,6 @@
-use std::{collections::HashMap, collections::HashSet, hash::Hash};
+use std::{collections::HashSet, hash::Hash};
 
+use ahash::AHashMap;
 use enum_map::{Enum, EnumMap};
 
 use super::InputHandler;
@@ -8,7 +9,7 @@ use super::InputHandler;
 /// See module-level documentation for more.
 pub struct PollingInputHandler<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Clone> {
     /// Maps inputs to the controls they activate
-    control_config: HashMap<I, C>,
+    control_config: AHashMap<I, C>,
     /// How long each control has been pressed
     input_time: EnumMap<C, u32>,
     /// If this is Some, we're waiting for a new control config.
@@ -19,7 +20,7 @@ impl<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Clone> PollingInputHandler
     /// Create a new PollingInputHandler without any controls.
     pub fn new_empty() -> Self {
         Self {
-            control_config: HashMap::new(),
+            control_config: AHashMap::new(),
             // conveniently, the default value for u32 is 0!
             // and we want the map to start full of zeros.
             // (zeroes?)
@@ -30,7 +31,7 @@ impl<I: Hash + Eq + PartialEq + Clone, C: Enum<u32> + Clone> PollingInputHandler
 
     /// Create a new PollingInputHandler with the specified controls.
     /// The HashMap in should map inputs to the controls you want them to actuate.
-    pub fn new(control_config: HashMap<I, C>) -> Self {
+    pub fn new(control_config: AHashMap<I, C>) -> Self {
         Self {
             control_config,
             input_time: EnumMap::default(),
